@@ -7,9 +7,11 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon16.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
+      "16": "icon16_white_noborder.png",
+      "32": "icon32_white_noborder.png",
+      "48": "icon48_white_noborder.png",
+      "64": "icon64_white_noborder.png",
+      "128": "icon128_white_noborder.png"
     }
   },
   "background": {
@@ -23,8 +25,10 @@
     }
   ],
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "icon16_white_noborder.png",
+    "32": "icon32_white_noborder.png",
+    "48": "icon48_white_noborder.png",
+    "64": "icon64_white_noborder.png",
+    "128": "icon128_white_noborder.png"
   }
 }
