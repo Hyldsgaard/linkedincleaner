@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "LinkedIn Feed Cleaner",
   "version": "1.1.0",
-  "description": "Removes promoted/sponsored posts from the LinkedIn feed",
+  "description": "Cleans your LinkedIn feed by filtering promoted, suggested, recommended, and connection activity posts",
   "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",

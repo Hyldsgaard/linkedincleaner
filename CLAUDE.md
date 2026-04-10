@@ -25,8 +25,8 @@ There are three execution contexts that communicate via `chrome.storage.local`:
 
 ```js
 {
-  filters: { promoted: true },   // true = hide that post type
-  counts:  { promoted: 0 }       // lifetime blocked count per type
+  filters: { promoted: true, suggested: true, recommended: true, activity: false },
+  counts:  { promoted: 0, suggested: 0, recommended: 0, activity: 0 }
 }
 ```
 
@@ -36,12 +36,17 @@ LinkedIn uses obfuscated/hashed CSS classes that change on every deploy. Detecti
 
 - Feed container: `[data-testid="mainFeed"]`
 - Individual posts: `[role="listitem"]` descendants of the feed
-- Promoted posts: a text node with exact content `"Promoted"` somewhere inside the listitem
+- **Single-label filters** (`FILTER_MAP` in `content.js`): exact text node match — `"Promoted"`, `"Suggested"`, `"Recommended for you"`
+- **Activity filter**: text node ending with one of the `ACTIVITY_PHRASES` — `"likes this"`, `"commented on this"`, `"reposted this"`, `"celebrates this"`, `"loves this"`, `"supports this"`, `"finds this funny"`, `"finds this insightful"`
 
-Posts are hidden by setting a `data-linkedin-promoted` attribute, which is targeted by an injected `<style>` tag (`display: none !important`). This survives React re-renders better than inline `style` changes.
+Posts are hidden by setting a `data-linkedin-*` attribute on both the `[role="listitem"]` and its nearest ancestor that is a direct child of the feed container. Both are targeted by an injected `<style>` tag (`display: none !important`), which eliminates layout gaps and survives React re-renders.
 
 ### Adding a new filter type
 
-1. Add a key to `DEFAULTS.filters` and `DEFAULTS.counts` in both `content.js` and `popup.js`
-2. Add detection logic in `applyFilters()` in `content.js` (follow the promoted posts pattern)
-3. Add a toggle row in `popup.html` and wire it up in `popup.js`
+For a single-label filter (e.g. a new LinkedIn label):
+1. Add an entry to `FILTER_MAP` in `content.js`
+2. Add the key to `DEFAULTS.filters/counts` in both `content.js` and `popup.js`
+3. Add a CSS rule in the injected `<style>` block in `content.js`
+4. Add a toggle row in `popup.html` and the key to the `FILTERS` array in `popup.js`
+
+For an activity-phrase filter, add the phrase to `ACTIVITY_PHRASES` in `content.js`.

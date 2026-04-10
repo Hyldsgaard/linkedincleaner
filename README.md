@@ -5,8 +5,11 @@ A Chrome extension that removes unwanted posts from your LinkedIn feed.
 ## Features
 
 - Hides **promoted/sponsored posts** from the feed
+- Hides **suggested posts** (algorithmic recommendations)
+- Hides **"Recommended for you"** people/connection suggestions
+- Hides **connection activity posts** (when someone likes, comments, or reacts to a stranger's post) — off by default
 - Toggle each filter on/off from the extension popup
-- Tracks how many posts have been blocked
+- Tracks how many posts of each type have been blocked
 
 ## Installation
 
@@ -14,7 +17,7 @@ A Chrome extension that removes unwanted posts from your LinkedIn feed.
 2. Open Chrome and go to `chrome://extensions`
 3. Enable **Developer mode** (top right)
 4. Click **Load unpacked** and select this folder
-5. Navigate to [linkedin.com/feed](https://www.linkedin.com/feed) — promoted posts will be hidden automatically
+5. Navigate to [linkedin.com/feed](https://www.linkedin.com/feed) — active filters apply automatically
 
 ## Usage
 
@@ -26,4 +29,6 @@ Click the extension icon in the Chrome toolbar to open the popup, where you can:
 
 ## How it works
 
-LinkedIn marks sponsored posts with a "Promoted" label in the feed. The extension detects this label using a `MutationObserver` so it catches posts loaded as you scroll, not just on initial page load. Hidden posts can be restored at any time by toggling the filter off.
+LinkedIn uses stable semantic markers in its feed HTML regardless of its obfuscated CSS classes. The extension detects post types by looking for specific text labels (`"Promoted"`, `"Suggested"`, `"Recommended for you"`) and activity phrases (`"likes this"`, `"commented on this"`, etc.) inside each `[role="listitem"]` element.
+
+A `MutationObserver` watches the feed so posts injected on scroll are caught immediately. Hidden posts leave no gap in the layout and can be restored at any time by toggling the filter off.
