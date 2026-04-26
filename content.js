@@ -16,9 +16,9 @@
   };
   let currentFilters = DEFAULTS.filters;
 
-  // Single-label filters: exact text match → attribute + count key
+  // Single-label filters: exact or prefix text match → attribute + count key
   const FILTER_MAP = {
-    'Promoted':            { attr: 'data-linkedin-promoted',    key: 'promoted' },
+    'Promoted':            { attr: 'data-linkedin-promoted',    key: 'promoted',     prefix: true },
     'Suggested':           { attr: 'data-linkedin-suggested',   key: 'suggested' },
     'Recommended for you': { attr: 'data-linkedin-recommended', key: 'recommended' },
   };
@@ -26,13 +26,20 @@
   // Activity filter: post headers like "X liked/commented/reposted this"
   const ACTIVITY_PHRASES = [
     'likes this',
+    'like this',
     'commented on this',
+    'commented',
     'reposted this',
     'celebrates this',
+    'celebrate this',
     'loves this',
+    'love this',
     'supports this',
+    'support this',
     'finds this funny',
+    'find this funny',
     'finds this insightful',
+    'find this insightful',
   ];
 
   function getFeedChild(post) {
@@ -49,10 +56,12 @@
     if (!post.hasAttribute(attr)) {
       post.setAttribute(attr, 'true');
       getFeedChild(post).setAttribute(attr, 'true');
-      chrome.storage.local.get(DEFAULTS, ({ counts }) => {
-        counts[key]++;
-        chrome.storage.local.set({ counts });
-      });
+      try {
+        chrome.storage.local.get(DEFAULTS, ({ counts }) => {
+          counts[key]++;
+          chrome.storage.local.set({ counts });
+        });
+      } catch {}
     }
   }
 
@@ -68,7 +77,8 @@
         const label = node.textContent.trim();
 
         // Single-label filters
-        const filter = FILTER_MAP[label];
+        const filter = FILTER_MAP[label] ||
+          Object.entries(FILTER_MAP).find(([k, f]) => f.prefix && label.startsWith(k))?.[1];
         if (filter) {
           if (currentFilters[filter.key]) {
             markPost(post, filter.attr, filter.key);
