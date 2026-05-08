@@ -7,11 +7,12 @@
     [data-linkedin-suggested]   { display: none !important; }
     [data-linkedin-recommended] { display: none !important; }
     [data-linkedin-activity]    { display: none !important; }
+    [data-linkedin-rightcol]    { display: none !important; }
   `;
   document.head.appendChild(style);
 
   const DEFAULTS = {
-    filters: { promoted: true, suggested: true, recommended: true, activity: false },
+    filters: { promoted: true, suggested: true, recommended: true, activity: false, rightcol: true },
     counts:  { promoted: 0, suggested: 0, recommended: 0, activity: 0 }
   };
   let currentFilters = DEFAULTS.filters;
@@ -117,18 +118,35 @@
     }
   }
 
+  function applyRightColFilter() {
+    const feed = document.querySelector('[data-testid="mainFeed"]');
+    if (!feed) return;
+    const rightCol = feed.parentElement.nextElementSibling;
+    if (!rightCol) return;
+    if (currentFilters.rightcol) {
+      rightCol.setAttribute('data-linkedin-rightcol', 'true');
+    } else {
+      rightCol.removeAttribute('data-linkedin-rightcol');
+    }
+  }
+
   chrome.storage.onChanged.addListener((changes) => {
     if (changes.filters) {
       currentFilters = changes.filters.newValue;
       applyFilters();
+      applyRightColFilter();
     }
   });
 
   chrome.storage.local.get(DEFAULTS, ({ filters }) => {
     currentFilters = filters;
     applyFilters();
+    applyRightColFilter();
 
-    const observer = new MutationObserver(applyFilters);
+    const observer = new MutationObserver(() => {
+      applyFilters();
+      applyRightColFilter();
+    });
     observer.observe(document.body, { childList: true, subtree: true });
   });
 })();

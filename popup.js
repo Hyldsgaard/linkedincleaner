@@ -1,5 +1,5 @@
 const DEFAULTS = {
-  filters: { promoted: true, suggested: true, recommended: true, activity: false },
+  filters: { promoted: true, suggested: true, recommended: true, activity: false, rightcol: true },
   counts:  { promoted: 0, suggested: 0, recommended: 0, activity: 0 }
 };
 
@@ -10,6 +10,7 @@ function render({ filters, counts }) {
     document.getElementById(`toggle-${key}`).checked = filters[key];
     document.getElementById(`count-${key}`).textContent = `${counts[key]} blocked`;
   }
+  document.getElementById('toggle-rightcol').checked = filters.rightcol ?? true;
 }
 
 chrome.storage.local.get(DEFAULTS, (data) => render(data));
@@ -22,6 +23,13 @@ for (const key of FILTERS) {
     });
   });
 }
+
+document.getElementById('toggle-rightcol').addEventListener('change', (e) => {
+  chrome.storage.local.get(DEFAULTS, ({ filters, counts }) => {
+    filters.rightcol = e.target.checked;
+    chrome.storage.local.set({ filters });
+  });
+});
 
 document.getElementById('reset').addEventListener('click', () => {
   const counts = { promoted: 0, suggested: 0, recommended: 0, activity: 0 };
