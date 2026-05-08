@@ -21,6 +21,10 @@
     'Promoted':            { attr: 'data-linkedin-promoted',    key: 'promoted',     prefix: true },
     'Suggested':           { attr: 'data-linkedin-suggested',   key: 'suggested' },
     'Recommended for you': { attr: 'data-linkedin-recommended', key: 'recommended' },
+    // Danish
+    'Promoveret':          { attr: 'data-linkedin-promoted',    key: 'promoted',     prefix: true },
+    'Foreslået':           { attr: 'data-linkedin-suggested',   key: 'suggested' },
+    'Anbefalet til dig':   { attr: 'data-linkedin-recommended', key: 'recommended' },
   };
 
   // Activity filter: post headers like "X liked/commented/reposted this"
@@ -40,6 +44,16 @@
     'find this funny',
     'finds this insightful',
     'find this insightful',
+    // Danish
+    'synes godt om dette',
+    'elsker dette',
+    'kommenterede',
+    'hylder dette',
+    'delte dette',
+    'støtter dette',
+    'synes, at dette er sjovt',
+    'likes dette',
+    'synes, at dette er indsigtsfuldt',
   ];
 
   function getFeedChild(post) {
