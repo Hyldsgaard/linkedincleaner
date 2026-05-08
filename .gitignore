@@ -1,3 +1,4 @@
 .playwright-mcp/
 .claude/
 .vscode/nowdev-ai-config.json
+.DS_Store
